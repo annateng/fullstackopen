@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import dbService from './services/db'
+import db from './services/db'
 
 const Filter = ({searchVal, handleChange}) => (
   <div>
@@ -21,13 +22,28 @@ const PersonForm = ({handleSubmit, newName, handleNameChange, newNumber, handleN
   </form>
 )
 
-const Persons = ({persons, searchVal}) => (
-  persons.filter(
+const Persons = ({persons, searchVal, setPersons}) => {
+  
+  const deletePerson = (id, confirmed) => {
+    if (!confirmed) return
+    const personsCopy = persons.slice()
+    personsCopy.splice(personsCopy.map(person => person.id).indexOf(id), 1)
+    
+    dbService.deleteEntry(id)
+      .then(() => {setPersons(personsCopy)})
+  }
+
+  return persons.filter(
     person => person.name.toLowerCase().includes(searchVal.toLowerCase())
   ).map(
-      person => <p key={person.name}>{person.name} {person.number}</p>
+      person => (
+        <div key={person.name}>
+          <span>{person.name} {person.number}   </span>
+          <button type='button' onClick={() => deletePerson(person.id, window.confirm(`delete ${person.name}?`))}>delete</button>
+        </div>
+      )
   )
-)
+}
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -36,10 +52,7 @@ const App = () => {
   const [ searchVal, setSearchVal ] = useState('')
 
   useEffect(
-    () => {axios
-            .get('http://localhost:3001/persons')
-            .then(response => setPersons(response.data))
-          },
+    () => {db.getAll().then(response => setPersons(response))},
     []
   )
 
@@ -50,19 +63,27 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    // check that name doesnt already exist in the phonebook
-    if (persons.map(person => person.name).includes(newName)) {
-      window.alert(`${newName} is already added to phonebook`)
-      setNewName('')
-      setNewNumber('')
-      return;
+    // if name already exists in phonebook, update number on prompt
+    if (persons.map(person => person.name.toLowerCase()).includes(newName.toLowerCase())) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const oldPersonsIndex = persons.map(person => person.name.toLowerCase()).indexOf(newName.toLowerCase())
+        
+        const newPerson = persons[oldPersonsIndex]
+        newPerson.number = newNumber
+        let newPersons = persons.slice()
+        newPersons.splice(oldPersonsIndex,1)
+        setPersons(newPersons.concat(newPerson))
+      }
+    } 
+    else { // otherwise, add person to phone book
+    dbService.create({name: newName, number: newNumber})
+              .then(response => setPersons(persons.concat(response)))
     }
-
-    // add person to phone book
-    setPersons(persons.concat({name: newName, number: newNumber}))
     setNewName('')
     setNewNumber('')
   }
+
+  
 
   return (
     <div>
@@ -72,7 +93,7 @@ const App = () => {
         <PersonForm handleSubmit={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
       <div>
-          <Persons persons={persons} searchVal={searchVal}/>
+          <Persons persons={persons} searchVal={searchVal} setPersons={setPersons}/>
       </div>
         </div>
   )
