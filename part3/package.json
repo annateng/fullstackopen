@@ -1,0 +1,19 @@
+{
+  "name": "part3",
+  "version": "1.0.0",
+  "description": "fullstackopen section 3 phonebook exercises",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  },
+  "scripts": {
+    "test": "echo \"error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "anna teng",
+  "license": "ISC"
+}
