@@ -1,6 +1,11 @@
-const express = require("express");
+const express = require('express');
+const morgan = require('morgan')
 const app = express();
+
 app.use(express.json())
+
+morgan.token('post-data', (req, res) => JSON.stringify(req.body))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :post-data'))
 
 let persons = [
   {
@@ -61,8 +66,6 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req,res) => {
     const person = req.body
-    console.log(req.get('Content-Type'))
-    console.log(person)
 
     // error handling
     if (!person) {
@@ -85,7 +88,6 @@ app.post('/api/persons', (req,res) => {
 
     person.id = Math.floor(Math.random() * 1000000000)
     persons.push(person)
-    console.log(persons)
 
     res.json(person)
 })
