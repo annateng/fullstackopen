@@ -129,6 +129,7 @@ const App = () => {
     else { // otherwise, add person to phone book
       dbService.create({name: newName, number: newNumber})
               .then(response => setPersons(persons.concat(response)))
+              .catch(error => console.log(error))
       
       // set successful added person message
       const createPersonMessage = `${newName} was successfully added to the phonebook`
