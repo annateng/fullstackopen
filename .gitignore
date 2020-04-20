@@ -1,3 +1,5 @@
 # ignore test folder - these should not be submitted with homework assignments
 test/
-*/node_modules/
+part1/node_modules/
+part2/node_modules/
+part3/node_modules/

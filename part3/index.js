@@ -1,14 +1,20 @@
 const express = require('express');
 const morgan = require('morgan')
 const cors = require('cors')
+
+// create an express application
 const app = express();
 
+// use json parser
 app.use(express.json())
+// search for static files in ./build/
 app.use(express.static('build'))
 
+// use morgan to log requests
 morgan.token('post-data', (req, res) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :post-data'))
 
+// use cors to handle cross origin resource sharing
 app.use(cors())
 
 let persons = [
