@@ -1,1 +1,10 @@
-DELETE http://localhost:3001/api/persons/1
+# POST http://localhost:3601/api/persons
+# Content-Type: application/json
+
+# {
+#     "name": "somebody else",
+#     "number": "980985039850940583485036"
+# }
+
+DELETE http://localhost:3601/api/persons/5e9e6269691fa70fa51cd328
+

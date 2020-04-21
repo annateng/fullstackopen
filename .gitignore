@@ -3,3 +3,4 @@ test/
 part1/node_modules/
 part2/node_modules/
 part3/node_modules/
+part3/.env

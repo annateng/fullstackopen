@@ -98,35 +98,37 @@ const App = () => {
 
   const handleNameChange = (event) => setNewName(event.target.value)
   const handleNumberChange = (event) => setNewNumber(event.target.value)
-  const handleSearchChange = (event) => setSearchVal(event.target.value);
+  const handleSearchChange = (event) => setSearchVal(event.target.value)
 
   const addPerson = (event) => {
     event.preventDefault()
-
     // if name already exists in phonebook, update number on prompt
-    if (persons.map(person => person.name.toLowerCase()).includes(newName.toLowerCase())) {
+    if (persons.find(person => person.name.toLowerCase() === newName)) {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-        const oldPersonsIndex = persons.map(person => person.name.toLowerCase()).indexOf(newName.toLowerCase())
-        
-        // update persons array
-        const newPerson = persons[oldPersonsIndex]
-        newPerson.number = newNumber
-        let newPersons = persons.slice()
-        newPersons.splice(oldPersonsIndex,1)
-        setPersons(newPersons.concat(newPerson))
+        const person = {...persons.find(person => person.name.toLowerCase() === newName.toLowerCase())}
+        person.number = newNumber
+        console.log('id', person.id)
+        dbService.update(person.id, person)
+            .then(response => {
+                console.log(response)
+                // update persons array
+                setPersons(persons.filter(p => p.id !== person.id).concat(person))
 
-        // set successful number change message
-        const numChangeMessage = `${newName}'s phone number was successfully changed to ${newNumber}`
-        setErrorMessage(numChangeMessage)
-        setTimeout(() => setErrorMessage(null), 5000)
+                // set successful number change message
+                const numChangeMessage = `${newName}'s phone number was successfully changed to ${newNumber}`
+                setErrorMessage(numChangeMessage)
+                setTimeout(() => setErrorMessage(null), 5000)
+            })
+            .catch(error => {
+                console.log('rep', error)
+            })
       } else {
         // set no change made message
         const noChangeMessage = `No change was made to the phonebook`
         setErrorMessage(noChangeMessage)
         setTimeout(() => setErrorMessage(null), 5000)
       }
-    } 
-    else { // otherwise, add person to phone book
+    } else { // otherwise, add person to phone book
       dbService.create({name: newName, number: newNumber})
               .then(response => setPersons(persons.concat(response)))
               .catch(error => console.log(error))
