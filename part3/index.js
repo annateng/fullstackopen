@@ -46,7 +46,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 })
 
 // delete entry
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
     
     Person.findByIdAndDelete(req.params.id)
         .then(person => {res.status(204).end(`${person.name} was deleted`)})
@@ -54,49 +54,23 @@ app.delete('/api/persons/:id', (req, res) => {
 })
 
 // add person to the database
-app.post('/api/persons', (req,res) => {
+app.post('/api/persons', (req, res, next) => {
     const personData = req.body
-
-    // error handling
-    if (!personData) {
-        return res.status(400).json({
-            error: 'content missing'
-        })
-    } else if (personData.name == null) {
-        return res.status(400).json({
-            error: 'name must not be null'
-        })
-    } else if (personData.number == null) {
-        return res.status(400).json({
-            error: 'number must not be null'
-        })
-    } 
     
-    Person.exists({name: new RegExp(personData.name, 'i')})
-        .then(isDuplicate => { 
-            if (isDuplicate) {
-                return res.status(400).json({
-                    error: 'name must be unique'
-                })
-            }
-            else {
-                const person = new Person({
-                    name: personData.name,
-                    number: personData.number,
-                    id: Math.floor(Math.random() * 1000000000)
-                })
+    const person = new Person({
+        name: personData.name,
+        number: personData.number,
+        id: Math.floor(Math.random() * 1000000000)
+    })
 
-                person.save().then(savedPerson => {
-                    res.json(savedPerson.toJSON())
-                })
-            }
-        })
+    person.save()
+    .then(savedPerson => {res.json(savedPerson.toJSON())})
+    .catch(error => next(error))
 })
 
 // update existing database entry
-app.put('/api/persons/:id', (req, res) => {
+app.put('/api/persons/:id', (req, res, next) => {
     const personData = req.body
-    console.log('personData', personData)
 
     Person.findByIdAndUpdate(req.params.id, personData, {new: true})
         .then(updatedPerson => {res.json(updatedPerson.toJSON())})
@@ -110,6 +84,7 @@ const errorHandler = (error, req, res, next) => {
     console.error(error.message)
 
     if (error.name === 'CastError') return res.status(400).send({error: 'malformed id'})
+    else if (error.name === 'ValidationError') return res.status(400).send({error: error.message})
 
     next(error)
 }
