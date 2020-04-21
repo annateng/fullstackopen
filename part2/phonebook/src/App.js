@@ -2,6 +2,16 @@ import React, { useState, useEffect } from 'react'
 import dbService from './services/db'
 import db from './services/db'
 
+/* Reusable code for showing message to the user */
+const showMessage = (message, setErrorMessage, timeOut) => {
+    if (!timeOut) timeOut = 5000 // default message display time is 5 seconds
+    setErrorMessage(message)
+    setTimeout(() => setErrorMessage(message), timeOut)
+}
+
+/******** BEGIN REACT COMPONENTS ***************************************/
+
+/** Notification  message shown to users */
 const Notification = ({message}) => {
   const notificationStyle = {
     color: 'green',
@@ -13,10 +23,10 @@ const Notification = ({message}) => {
     padding: '10px',
     marginBottom: '10px'
   }
-  
   if (message === null) return null
   else return <div style={notificationStyle}>{message}</div>
 }
+
 
 const Filter = ({searchVal, handleChange}) => (
   <div>
@@ -47,25 +57,20 @@ const Persons = ({persons, searchVal, setPersons, setErrorMessage}) => {
     // if not confirmed, do nothing
     if (!confirmed) {
       // set no change made message
-      const noChangeMessage = `No change was made to the phonebook`
-      setErrorMessage(noChangeMessage)
-      setTimeout(() => setErrorMessage(null), 5000)
+      showMessage(`No change was made to the phonebook`, setErrorMessage)
     } else {
       // remove person from the phonebook
       const personsCopy = persons.slice()
       personsCopy.splice(personsCopy.map(person => person.id).indexOf(id), 1)
       
       dbService.deleteEntry(id)
-        .then(() => {
+        .then(res => {
           setPersons(personsCopy)
           // set successful deletion message
-          const deletionMessage = `${personName} was successfully removed from the phonebook`
-          setErrorMessage(deletionMessage)
-          setTimeout(() => setErrorMessage(null), 5000)
+          showMessage(`${personName} was successfully removed from the phonebook`, setErrorMessage)
         })
-        .catch(() => { // catch error if entry was previously deleted already
-          setErrorMessage(`${personName} was already removed from the phonebook`)
-          setTimeout(() => setErrorMessage(null), 5000)
+        .catch(error => { // catch error if entry was previously deleted already
+          showMessage(`${personName} was already removed from the phonebook`, setErrorMessage)
           setPersons(personsCopy)
         })
     }
@@ -114,26 +119,20 @@ const App = () => {
                 setPersons(persons.filter(p => p.id !== person.id).concat(person))
 
                 // set successful number change message
-                const numChangeMessage = `${newName}'s phone number was successfully changed to ${newNumber}`
-                setErrorMessage(numChangeMessage)
-                setTimeout(() => setErrorMessage(null), 5000)
+                showMessage(`${newName}'s phone number was successfully changed to ${newNumber}`, setErrorMessage)
             })
-            .catch(error => {console.log(error)})
+            .catch.catch(error => {showMessage(error.response.data.error, setErrorMessage)})
       } else {
         // set no change made message
-        const noChangeMessage = `No change was made to the phonebook`
-        setErrorMessage(noChangeMessage)
-        setTimeout(() => setErrorMessage(null), 5000)
+        showMessage(`No change was made to the phonebook`, setErrorMessage)
       }
     } else { // otherwise, add person to phone book
       dbService.create({name: newName, number: newNumber})
-              .then(response => setPersons(persons.concat(response)))
-              .catch(error => console.log(error))
-      
-      // set successful added person message
-      const createPersonMessage = `${newName} was successfully added to the phonebook`
-      setErrorMessage(createPersonMessage)
-      setTimeout(() => setErrorMessage(null), 5000)
+              .then(response => {
+                  setPersons(persons.concat(response))
+                  showMessage(`${newName} was successfully added to the phonebook`, setErrorMessage)
+                })
+                .catch(error => {showMessage(error.response.data.error, setErrorMessage)})
     }
     setNewName('')
     setNewNumber('')
