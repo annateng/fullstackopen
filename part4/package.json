@@ -11,12 +11,23 @@
     "nodemon": "^2.0.3"
   },
   "devDependencies": {
-    "eslint": "^6.8.0"
+    "eslint": "^6.8.0",
+    "jest": "^25.4.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "test": "jest --verbose", 
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "author": "anna teng",
-  "license": "ISC"
+  "license": "ISC",
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
 }
