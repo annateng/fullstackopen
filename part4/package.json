@@ -1,0 +1,22 @@
+{
+  "name": "part4",
+  "version": "0.0.1",
+  "description": "part4 programming assignments",
+  "main": "index.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.10",
+    "nodemon": "^2.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "author": "anna teng",
+  "license": "ISC"
+}
