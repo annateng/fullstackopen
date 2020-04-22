@@ -1,25 +1,19 @@
+require('express-async-errors')
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
 const express = require('express')
 
 blogRouter.use(express.json())
 
-blogRouter.get('/', (request, response, next) => {
-  Blog
-    .find({})
-    .then(blogs => {
-      response.json(blogs.map(blog => blog.toJSON()))
-    })
-    .catch(err => next(err))
+blogRouter.get('/', async(request, response, next) => {
+  const blogs = await Blog.find({})
+  response.json(blogs.map(blog => blog.toJSON()))
 })
 
-blogRouter.post('/', (request, response, next) => {
+blogRouter.post('/', async(request, response, next) => {
   const blog = new Blog(request.body)
-
-  blog
-    .save()
-    .then(result => {response.status(201).json(result.toJSON)})
-    .catch(err => next(err))
+  const savedBlog = await blog.save()
+  response.status(201).json(savedBlog.toJSON())
 })
 
 module.exports = blogRouter
