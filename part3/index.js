@@ -52,8 +52,9 @@ app.get('/api/persons/:id', (req, res, next) => {
 // delete entry
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndDelete(req.params.id)
-    .then((person) => {
-      res.status(204).end(`${person.name} was deleted`)
+    .then(person => {
+      if (person === null) throw 'person was already deleted'
+      res.status(204).end()
     })
     .catch((error) => next(error))
 })
@@ -80,7 +81,7 @@ app.post('/api/persons', (req, res, next) => {
 app.put('/api/persons/:id', (req, res, next) => {
   const personData = req.body
 
-  Person.findByIdAndUpdate(req.params.id, personData, { new: true })
+  Person.findByIdAndUpdate(req.params.id, personData, { new: true, runValidators: true, context: 'query' })
     .then((updatedPerson) => {
       res.json(updatedPerson.toJSON())
     })

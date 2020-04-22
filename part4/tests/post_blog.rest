@@ -1,9 +1,18 @@
-POST http://localhost:3003/api/blogs
+# POST http://localhost:3003/api/blogs
+# content-type: application/json
+
+# {
+#   "title": "no url",
+#   "author": "test",
+#   "likes": 7,
+#   "url": "lfjdsljf"
+# }
+
+# DELETE http://localhost:3003/api/blogs/5e9f8ff94357da19b4c28fd8
+
+PUT http://localhost:3003/api/blogs/5e9f955c04eaab1a42261e9d
 content-type: application/json
 
 {
-  "title": "fuck u",
-  "author": "test",
-  "url": "exists",
-  "likes": 7
+  "url": "facebook.com"
 }

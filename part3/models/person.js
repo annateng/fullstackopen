@@ -18,7 +18,16 @@ mongoose
   })
 
 const pSchema = new mongoose.Schema({
-  name: { type: String, required: true, unique: true, minlength: 3 },
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+    collation: {
+      locale: 'en',
+      strength: 2
+    },
+    minlength: 3
+  },
   number: {
     type: String,
     required: true,

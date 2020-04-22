@@ -109,7 +109,7 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
     // if name already exists in phonebook, update number on prompt
-    if (persons.find(person => person.name.toLowerCase() === newName)) {
+    if (persons.find(person => person.name.toLowerCase() === newName.toLowerCase())) {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         const person = {...persons.find(person => person.name.toLowerCase() === newName.toLowerCase())}
         person.number = newNumber
@@ -121,7 +121,7 @@ const App = () => {
                 // set successful number change message
                 showMessage(`${newName}'s phone number was successfully changed to ${newNumber}`, setErrorMessage)
             })
-            .catch.catch(error => {showMessage(error.response.data.error, setErrorMessage)})
+            .catch(error => {showMessage(error.response.data.error, setErrorMessage)})
       } else {
         // set no change made message
         showMessage(`No change was made to the phonebook`, setErrorMessage)
