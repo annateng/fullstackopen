@@ -101,3 +101,23 @@ describe ('favorite blog', () => {
     expect(listHelper.favoriteBlog(biggerList)).toEqual(biggerList[2])
   })
 })
+
+// max blogs
+test ('max blogs test', () => {
+  expect(listHelper.mostBlogs(biggerList)).toEqual(
+    {
+      author: 'Robert C. Martin',
+      blogs: 3
+    }
+  )
+})
+
+// most likes by author
+test ('most likes by author', () => {
+  expect(listHelper.mostLikes(biggerList)).toEqual(
+    {
+      author: 'Edsger W. Dijkstra',
+      likes: 17
+    }
+  )
+})
