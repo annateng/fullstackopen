@@ -1,18 +1,20 @@
-# POST http://localhost:3003/api/blogs
-# content-type: application/json
-
-# {
-#   "title": "no url",
-#   "author": "test",
-#   "likes": 7,
-#   "url": "lfjdsljf"
-# }
-
-# DELETE http://localhost:3003/api/blogs/5e9f8ff94357da19b4c28fd8
-
-PUT http://localhost:3003/api/blogs/5e9f955c04eaab1a42261e9d
+POST http://localhost:3003/api/blogs
 content-type: application/json
 
 {
-  "url": "facebook.com"
+  "title": "LOOK",
+  "author": "AT",
+  "likes": 0,
+  "url": "ME NOW"
 }
+
+# DELETE http://localhost:3003/api/blogs/5e9f8ff94357da19b4c28fd8
+
+# PUT http://localhost:3003/api/blogs/5e9f955c04eaab1a42261e9d
+# content-type: application/json
+
+# {
+#   "url": "facebook.com"
+# }
+
+# GET http://localhost:3003/api/blogs

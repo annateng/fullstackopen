@@ -8,6 +8,7 @@ const config = require('./utils/config')
 const logger = require('./utils/logger')
 const blogRouter = require('./controllers/blogRouter')
 const userRouter = require('./controllers/userRouter')
+const loginRouter = require('./controllers/loginRouter')
 const middleware = require('./utils/middleware')
 
 // handle deprecationwarning collection.ensureIndex
@@ -25,14 +26,19 @@ mongoose
 app.use(express.json())
 app.use(cors())
 // use morgan to log requests
-morgan.token('post-data', req => JSON.stringify(req.body))
-app.use(
-  morgan(
-    ':method :url :status :res[content-length] - :response-time ms :post-data'
+if (config.USE_LOGGER) {
+  morgan.token('post-data', req => JSON.stringify(req.body))
+  app.use(
+    morgan(
+      ':method :url :status :res[content-length] - :response-time ms :post-data'
+    )
   )
-)
+}
+
+app.use(middleware.tokenExtractor)
 app.use('/api/blogs', blogRouter)
 app.use('/api/users', userRouter)
+app.use('/api/login', loginRouter)
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 

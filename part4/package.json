@@ -23,10 +23,11 @@
     "supertest": "^4.0.2"
   },
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest --verbose",
+    "test:all": "cross-env NODE_ENV=test jest --verbose",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "start": "cross-env NODE_ENV=development node index.js",
-    "test2": "cross-env NODE_ENV=test jest --verbose --runInBand -- tests/blogtests.test.js"
+    "test:blogs": "cross-env NODE_ENV=test jest --verbose --runInBand -- tests/blogtests.test.js",
+    "test:users": "cross-env NODE_ENV=test jest --verbose --runInBand -- tests/usertests.test.js"
   },
   "author": "anna teng",
   "license": "ISC",
