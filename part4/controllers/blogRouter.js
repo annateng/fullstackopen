@@ -3,9 +3,6 @@ const express = require('express')
 const blogRouter = express.Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
-const config = require('../utils/config')
-const jwt = require('jsonwebtoken')
-// const logger = require('../utils/logger')
 
 blogRouter.use(express.json())
 
@@ -18,7 +15,8 @@ blogRouter.post('/', async(req, res) => {
   const blog = new Blog(req.body)
 
   // add user info to each saved blog
-  const user = await User.findById(req.tokenUserId) // tokenUserId is set by tokenExtractor middleware
+  if (!req.tokenUserId) return res.status(401).json({ error: 'missing or invalid authentication'})
+  const user = await User.findById(req.tokenUserId)
   blog.user = user._id
 
   const savedBlog = await blog.save()

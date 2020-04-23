@@ -1,14 +1,17 @@
 POST http://localhost:3003/api/blogs
 content-type: application/json
+authorization: bearer 
 
 {
-  "title": "LOOK",
-  "author": "AT",
-  "likes": 0,
-  "url": "ME NOW"
+  "title": "authentication tester blog",
+  "author": "CC",
+  "likes": 12000,
+  "url": "myspace.org"
 }
 
-# DELETE http://localhost:3003/api/blogs/5e9f8ff94357da19b4c28fd8
+# DELETE http://localhost:3003/api/blogs/5ea21b149e0bfa4112d0c1fa
+# authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZpcnN0IiwiaWQiOiI1ZWEyMTcyYzExYjdjYTQwYTkwMmFhYzciLCJpYXQiOjE1ODc2ODE4OTV9.eF89EQazrNCgdjZtlL65ffBAPT0zmfY8jMbHSLA4oJc
+
 
 # PUT http://localhost:3003/api/blogs/5e9f955c04eaab1a42261e9d
 # content-type: application/json

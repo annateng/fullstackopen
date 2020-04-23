@@ -153,4 +153,18 @@ test('missing title or url 400', async() => {
   expect(response2.body).toHaveLength(helper.biggerList.length)
 })
 
+test('missing token results in 401', async() => {
+  const newBlog = {
+    title: 'no likes',
+    author: 'mark zucko',
+    url: 'facebook.edu',
+  }
+
+  await api
+    .post('/api/blogs')
+    .set('Authorization', 'bearer ')
+    .send(newBlog)
+    .expect(401)
+})
+
 afterAll(() => {mongoose.connection.close()})

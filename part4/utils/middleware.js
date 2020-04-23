@@ -10,7 +10,7 @@ const config = require('./config')
 //   next()
 // }
 
-const tokenExtractor = (req, res, next) => {
+const tokenExtractor = async(req, res, next) => {
   const authorization = req.get('authorization')
   let token = undefined
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
@@ -18,13 +18,12 @@ const tokenExtractor = (req, res, next) => {
   } else return next() // if no authorization, no need to generate tokenID
 
   let decodedToken = undefined
-  if (token) decodedToken = jwt.verify(token, config.SECRET)
+  if (token) decodedToken = await jwt.verify(token, config.SECRET)
 
   if (!token || !decodedToken.id) return res.status(400).json({ error: 'missing or invalid token' })
 
   req.tokenUserId = decodedToken.id
   next()
-
 }
 
 const unknownEndpoint = (req, res) => {
