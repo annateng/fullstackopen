@@ -1,7 +1,25 @@
 const _ = require('lodash')
 
+/** SAMPLE USER OBJECTS TO USE */
+const initialUsers = [
+  {
+    username: 'mark',
+    password: 'password123',
+    name: 'mark'
+  },
+  {
+    username: 'ilovetoeatcock',
+    password: 'hellogorgeous',
+    name: 'steve'
+  } ,
+  {
+    username: 'telletubylover12345',
+    password: 'f83830FKT?29!',
+    name: 'kreashawn'
+  }
+]
 
-/** SAMPLE LIST OBJECTS TO USE */
+/** SAMPLE BLOG OBJECTS TO USE */
 const listWithOneBlog = [
   {
     id: '5a422aa71b54a676234d17f8',
@@ -100,6 +118,7 @@ const mostLikes = (blogs) => {
 module.exports = {
   listWithOneBlog,
   biggerList,
+  initialUsers,
   dummy,
   totalLikes,
   favoriteBlog,

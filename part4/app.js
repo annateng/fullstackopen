@@ -13,6 +13,7 @@ const middleware = require('./utils/middleware')
 
 // handle deprecationwarning collection.ensureIndex
 mongoose.set('useCreateIndex', true)
+mongoose.set('useFindAndModify', false)
 
 // connect to mongoose server
 mongoose

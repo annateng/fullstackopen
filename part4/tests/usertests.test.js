@@ -3,33 +3,15 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const User = require('../models/user')
+const helper = require('../utils/list_helper')
 
 const api = supertest(app)
-
-/** initial users for test */
-const initialUsers = [
-  {
-    username: 'mark',
-    password: 'password123',
-    name: 'mark'
-  },
-  {
-    username: 'ilovetoeatcock',
-    password: 'hellogorgeous',
-    name: 'steve'
-  } ,
-  {
-    username: 'telletubylover12345',
-    password: 'f83830FKT?29!',
-    name: 'kreashawn'
-  }
-]
 
 /** initialize database */
 beforeEach(async() => {
   await User.deleteMany({})
 
-  for (let user of initialUsers) {
+  for (let user of helper.initialUsers) {
     await api
       .post('/api/users')
       .send(user)
@@ -47,7 +29,7 @@ describe('initialize database with initialUsers works as expected', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
-    expect(res.body.length).toBe(initialUsers.length)
+    expect(res.body.length).toBe(helper.initialUsers.length)
   })
 })
 
@@ -67,7 +49,7 @@ describe('adding new user works properly', () => {
       .get('/api/users')
       .expect(200)
 
-    expect(allUsers.body.length).toBe(initialUsers.length + 1)
+    expect(allUsers.body.length).toBe(helper.initialUsers.length + 1)
     expect(res.body.username).toBe('sallyRocks')
     expect(res.body.name).toBe('')
     expect(res.body.id).toBeDefined
@@ -88,7 +70,7 @@ describe('adding new user works properly', () => {
       .get('/api/users')
       .expect(200)
 
-    expect(allUsers.body.length).toBe(initialUsers.length)
+    expect(allUsers.body.length).toBe(helper.initialUsers.length)
   })
 
   test('adding user with short username fails', async() => {
@@ -107,7 +89,7 @@ describe('adding new user works properly', () => {
       .get('/api/users')
       .expect(200)
 
-    expect(allUsers.body.length).toBe(initialUsers.length)
+    expect(allUsers.body.length).toBe(helper.initialUsers.length)
   })
 
   test('adding user without password fails', async() => {
@@ -124,7 +106,7 @@ describe('adding new user works properly', () => {
       .get('/api/users')
       .expect(200)
 
-    expect(allUsers.body.length).toBe(initialUsers.length)
+    expect(allUsers.body.length).toBe(helper.initialUsers.length)
   })
 })
 

@@ -24,7 +24,6 @@ blogRouter.post('/', async(req, res) => {
   const savedBlog = await blog.save()
 
   // add blog to list of user's blogs
-  console.log(user.blogs)
   user.blogs.push(savedBlog._id)
   await user.save()
 
@@ -34,8 +33,8 @@ blogRouter.post('/', async(req, res) => {
 blogRouter.delete('/:id', async(req, res) => {
   const blogToRemove = await Blog.findById(req.params.id)
   // blog can only be deleted by its creator
-  if (!req.tokenUserId || req.tokenUserId != blogToRemove.user) return res.status(401).send('user unauthorized to delete blog')
-  
+  if (!req.tokenUserId || req.tokenUserId !== blogToRemove.user) return res.status(401).send('user unauthorized to delete blog')
+
   const deletedBlog = await Blog.findByIdAndRemove(req.params.id)
   if (deletedBlog === null) return res.status(404).send('blog not found')
   res.status(204).end()
