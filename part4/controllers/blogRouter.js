@@ -1,7 +1,7 @@
 require('express-async-errors')
-const blogRouter = require('express').Router()
-const Blog = require('../models/blog')
 const express = require('express')
+const blogRouter = express.Router()
+const Blog = require('../models/blog')
 
 blogRouter.use(express.json())
 

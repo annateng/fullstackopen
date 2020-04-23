@@ -6,8 +6,12 @@ const morgan = require('morgan')
 
 const config = require('./utils/config')
 const logger = require('./utils/logger')
-const blogRouter = require('./controllers/blogRouter') // routers
+const blogRouter = require('./controllers/blogRouter')
+const userRouter = require('./controllers/userRouter')
 const middleware = require('./utils/middleware')
+
+// handle deprecationwarning collection.ensureIndex
+mongoose.set('useCreateIndex', true)
 
 // connect to mongoose server
 mongoose
@@ -28,6 +32,7 @@ app.use(
   )
 )
 app.use('/api/blogs', blogRouter)
+app.use('/api/users', userRouter)
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 
