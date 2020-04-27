@@ -1,5 +1,6 @@
 import React from 'react'
 import loginService from '../services/login'
+import blogService from './services/blogs'
 
 const Login = ({username, setUsername, password, setPassword, setUser, setMessage}) => {
   const handleLogin = async event => {
@@ -8,6 +9,7 @@ const Login = ({username, setUsername, password, setPassword, setUser, setMessag
     try {
       const user = await loginService.login(username, password)
       window.localStorage.setItem('user', JSON.stringify(user))
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')

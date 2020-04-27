@@ -6,6 +6,7 @@ const BlogForm = ({title, setTitle, author, setAuthor, url, setUrl, blogs, setBl
     event.preventDefault()
     blogService.create(title, author, url)
       .then(res => {
+        setMessage(`new blog created: ${title} by ${author}`)
         setBlogs(blogs.concat(res))
         setTitle('')
         setAuthor('')
