@@ -13,7 +13,7 @@ const App = () => {
   const [newBlogToggle, setNewBlogToggle] = useState(false)
 
   const setUserMessage = (message, time) => {
-    if (!time) time = 5000; // default timeout is 5sec
+    if (!time) time = 5000 // default timeout is 5sec
     setMessage(message)
     setTimeout(() => {setMessage(null)}, time)
   }
@@ -24,13 +24,13 @@ const App = () => {
     setUser(null)
   }
 
-  // get all blogs 
+  // get all blogs
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
-    )  
+    )
   }, [])
-  
+
   // check if user is already logged in
   useEffect(() => {
     const loggedUser = window.localStorage.getItem('user')

@@ -1,5 +1,5 @@
 import React from 'react'
-const Message = ({message}) => {
+const Message = ({ message }) => {
   const msgStyle = {
     backgroundColor: 'powderblue',
     color: 'darkgoldenrod',

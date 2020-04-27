@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, setMessage, blogs, setBlogs }) => {
+
   const [showDetail, setShowDetail] = useState(false)
 
   const blogStyle = {
@@ -20,14 +22,14 @@ const Blog = ({ blog, setMessage, blogs, setBlogs }) => {
     }
 
     blogService.update(blog.id, updatedBlog)
-      .then(res => {
+      .then(() => {
         setMessage(`updated likes for ${blog.title} by ${blog.author}`)
         const oldBlog = Object.assign({}, blog) // shallow copy. don't mutate blog directly
         oldBlog.likes++
         setBlogs(blogs.filter(b => b.id !== blog.id).concat(oldBlog))
       })
       .catch(err => {
-        setMessage(`error updating likes`)
+        setMessage('error updating likes')
         console.error(err)
       })
   }
@@ -35,7 +37,7 @@ const Blog = ({ blog, setMessage, blogs, setBlogs }) => {
   const deleteBlog = () => {
     if (window.confirm(`do you want to delete ${blog.name} by ${blog.author}?`)) {
       blogService.deleteEntry(blog.id)
-        .then(res => {
+        .then(() => {
           setMessage(`${blog.title} by ${blog.author} has been deleted`)
           setBlogs(blogs.filter(b => b.id !== blog.id))
         })
@@ -64,6 +66,13 @@ const Blog = ({ blog, setMessage, blogs, setBlogs }) => {
       { showDetail ? details() : null }
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  setMessage: PropTypes.func.isRequired,
+  blogs: PropTypes.array.isRequired,
+  setBlogs: PropTypes.func.isRequired
 }
 
 export default Blog

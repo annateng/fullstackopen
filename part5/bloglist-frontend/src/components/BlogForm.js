@@ -1,11 +1,11 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const BlogForm = ({blogs, setBlogs, setMessage, setVisible, username}) => {
+const BlogForm = ({ blogs, setBlogs, setMessage, setVisible, username }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  
+
   const createBlog = (event) => {
     event.preventDefault()
 
@@ -18,18 +18,18 @@ const BlogForm = ({blogs, setBlogs, setMessage, setVisible, username}) => {
     blogService.create(blog)
       .then(res => {
         setMessage(`new blog created: ${title} by ${author}`)
-        res.user = { username }
+        res.user = { username } // for displaying blog details
         setBlogs(blogs.concat(res))
         setTitle('')
         setAuthor('')
         setUrl('')
         setVisible(false)
       })
-      .catch(err => {
+      .catch(() => {
         setMessage('no blog was created')
       })
   }
-  
+
   return (
     <form onSubmit={createBlog}>
       <label>title: <input type='text' value={title} onChange={event => setTitle(event.target.value)} /></label><br />

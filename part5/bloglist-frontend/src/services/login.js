@@ -10,4 +10,4 @@ const login = async(user) => {
   }
 }
 
-export default { login } 
+export default { login }

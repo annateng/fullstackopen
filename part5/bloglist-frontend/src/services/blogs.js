@@ -26,7 +26,6 @@ const update = (id, blog) => {
   const config = {
     headers: { Authorization: token }
   }
-  console.log('config: ', config)
 
   return axios.put(`${baseUrl}/${id}`, blog, config)
     .then(res => res.data)
