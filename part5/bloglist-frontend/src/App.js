@@ -3,17 +3,14 @@ import Blog from './components/Blog'
 import Login from './components/Login'
 import Message from './components/Message'
 import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [message, setMessage] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const [newBlogToggle, setNewBlogToggle] = useState(false)
 
   const setUserMessage = (message, time) => {
     if (!time) time = 5000; // default timeout is 5sec
@@ -23,13 +20,14 @@ const App = () => {
 
   const logout = () => {
     window.localStorage.removeItem('user')
+    blogService.setToken(null)
     setUser(null)
   }
 
   // get all blogs 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs(blogs)
     )  
   }, [])
   
@@ -46,7 +44,7 @@ const App = () => {
   if (!user) return (
     <div>
       <Message message={message} />
-      <Login username={username} setUsername={setUsername} password={password} setPassword={setPassword} setUser={setUser} setMessage={setUserMessage} />
+      <Login setUser={setUser} setMessage={setUserMessage} />
     </div>
   )
   else return (
@@ -56,9 +54,11 @@ const App = () => {
       <button onClick={logout}>logout</button>
       <br />
       <br />
-      <BlogForm title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} blogs={blogs} setBlogs={setBlogs} setMessage={setUserMessage} />
+      <Togglable buttonLabel='new blog' visible={newBlogToggle} setVisible={setNewBlogToggle}>
+        <BlogForm blogs={blogs} setBlogs={setBlogs} setMessage={setUserMessage} setVisible={setNewBlogToggle} username={user.username}/>
+      </Togglable>
       <h2>blogs</h2>
-      {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
+      {blogs.sort((b1, b2) => b2.likes - b1.likes).map(blog => <Blog key={blog.id} blog={blog} setMessage={setUserMessage} blogs={blogs} setBlogs={setBlogs}/>)}
     </div>
   )
 }

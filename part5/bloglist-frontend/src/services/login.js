@@ -1,13 +1,9 @@
 import axios from 'axios'
 const baseUrl = '/api/login'
 
-const login = async(info) => {
-  const newUser = {
-    username: info.username,
-    password: info.password
-  }
+const login = async(user) => {
   try {
-    const res = await axios.post(baseUrl, newUser)
+    const res = await axios.post(baseUrl, user)
     return res.data
   } catch (err) {
     console.error(err)

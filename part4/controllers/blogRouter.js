@@ -39,6 +39,9 @@ blogRouter.delete('/:id', async(req, res) => {
 })
 
 blogRouter.put('/:id', async(req, res) => {
+  const blogToUpdate = await Blog.findById(req.params.id)
+  if (!req.tokenUserId || req.tokenUserId !== blogToUpdate.user) return res.status(401).send('user unauthorized to update blog')
+
   const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
   res.json(updatedBlog.toJSON())
 })

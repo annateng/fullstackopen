@@ -17,15 +17,18 @@ const create = (blog) => {
     headers: { Authorization: token }
   }
 
-  const newBlog = {
-    title: blog.title,
-    author: blog.author,
-    url: blog.url
-  }
-
-  return axios.post(baseUrl, newBlog, config)
+  return axios.post(baseUrl, blog, config)
     .then(res => res.data)
     //.catch(err => err) // YOU NEED TO THROW AN ERROR HERE IF YOU WANT THE PROMISE TO REJECT
 }
 
-export default { getAll, create, setToken }
+const update = (id, blog) => {
+  const config = {
+    headers: { Authorization: token }
+  }
+
+  return axios.put(`${baseUrl}/${id}`, blog, config)
+    .then(res => res.data)
+}
+
+export default { setToken, getAll, create, update }
