@@ -26,9 +26,19 @@ const update = (id, blog) => {
   const config = {
     headers: { Authorization: token }
   }
+  console.log('config: ', config)
 
   return axios.put(`${baseUrl}/${id}`, blog, config)
     .then(res => res.data)
 }
 
-export default { setToken, getAll, create, update }
+const deleteEntry = (id) => {
+  const config = {
+    headers: { Authorization: token }
+  }
+
+  return axios.delete(`${baseUrl}/${id}`, config)
+    .then(res => res.data)
+}
+
+export default { setToken, getAll, create, update, deleteEntry }

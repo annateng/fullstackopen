@@ -31,7 +31,7 @@ blogRouter.post('/', async(req, res) => {
 blogRouter.delete('/:id', async(req, res) => {
   const blogToRemove = await Blog.findById(req.params.id)
   // blog can only be deleted by its creator
-  if (!req.tokenUserId || req.tokenUserId !== blogToRemove.user) return res.status(401).send('user unauthorized to delete blog')
+  if (!req.tokenUserId || req.tokenUserId !== blogToRemove.user.toString()) return res.status(401).send('user unauthorized to delete blog')
 
   const deletedBlog = await Blog.findByIdAndRemove(req.params.id)
   if (deletedBlog === null) return res.status(404).send('blog not found')
@@ -40,7 +40,10 @@ blogRouter.delete('/:id', async(req, res) => {
 
 blogRouter.put('/:id', async(req, res) => {
   const blogToUpdate = await Blog.findById(req.params.id)
-  if (!req.tokenUserId || req.tokenUserId !== blogToUpdate.user) return res.status(401).send('user unauthorized to update blog')
+  // blog can only be updated by its creator
+  if (!req.tokenUserId || req.tokenUserId !== blogToUpdate.user.toString()) {
+    return res.status(401).send('user unauthorized to update blog')
+  }
 
   const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
   res.json(updatedBlog.toJSON())

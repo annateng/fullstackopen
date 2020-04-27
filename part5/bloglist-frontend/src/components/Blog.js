@@ -22,7 +22,7 @@ const Blog = ({ blog, setMessage, blogs, setBlogs }) => {
     blogService.update(blog.id, updatedBlog)
       .then(res => {
         setMessage(`updated likes for ${blog.title} by ${blog.author}`)
-        const oldBlog = Object.assign({}, blog)
+        const oldBlog = Object.assign({}, blog) // shallow copy. don't mutate blog directly
         oldBlog.likes++
         setBlogs(blogs.filter(b => b.id !== blog.id).concat(oldBlog))
       })
@@ -32,11 +32,26 @@ const Blog = ({ blog, setMessage, blogs, setBlogs }) => {
       })
   }
 
+  const deleteBlog = () => {
+    if (window.confirm(`do you want to delete ${blog.name} by ${blog.author}?`)) {
+      blogService.deleteEntry(blog.id)
+        .then(res => {
+          setMessage(`${blog.title} by ${blog.author} has been deleted`)
+          setBlogs(blogs.filter(b => b.id !== blog.id))
+        })
+        .catch(err => {
+          setMessage(`error deleting blog ${blog.title} by ${blog.author}`)
+          console.error(err)
+        })
+    }
+  }
+
   const details = () => (
     <div>
       <div>{blog.url}</div>
       <div>likes: {blog.likes} <button onClick={updateLikes}>like</button></div>
       <div>{blog.user.username}</div>
+      <button onClick={deleteBlog}>delete</button>
     </div>
   )
 
