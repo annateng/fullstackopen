@@ -4,7 +4,14 @@ import blogService from '../services/blogs'
 const BlogForm = ({title, setTitle, author, setAuthor, url, setUrl, blogs, setBlogs, setMessage}) => {
   const createBlog = (event) => {
     event.preventDefault()
-    blogService.create(title, author, url)
+
+    const blog = {
+      title,
+      author,
+      url
+    }
+
+    blogService.create(blog)
       .then(res => {
         setMessage(`new blog created: ${title} by ${author}`)
         setBlogs(blogs.concat(res))

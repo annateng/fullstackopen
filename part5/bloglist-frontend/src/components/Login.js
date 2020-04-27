@@ -1,13 +1,17 @@
 import React from 'react'
 import loginService from '../services/login'
-import blogService from './services/blogs'
+import blogService from '../services/blogs'
 
 const Login = ({username, setUsername, password, setPassword, setUser, setMessage}) => {
   const handleLogin = async event => {
     event.preventDefault()
 
     try {
-      const user = await loginService.login(username, password)
+      const loginInfo = {
+        username,
+        password
+      }
+      const user = await loginService.login(loginInfo)
       window.localStorage.setItem('user', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
