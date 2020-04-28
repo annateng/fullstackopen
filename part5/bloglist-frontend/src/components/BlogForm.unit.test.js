@@ -9,12 +9,10 @@ test('new blog event handler works correctly', () => {
     author: 'Saul Goodman',
     url: 'abc123.com'
   }
-  const setBlogs = jest.fn()
   const mockHandler = jest.fn()
-  const mockArray = []
 
   const component = render(
-    <BlogForm blogs={mockArray} setBlogs={setBlogs} setMessage={mockHandler} setVisible={mockHandler} username='' />
+    <BlogForm blogServiceCreate={mockHandler} />
   )
 
   const title = component.container.querySelector('#title')
@@ -22,12 +20,19 @@ test('new blog event handler works correctly', () => {
   const url = component.container.querySelector('#url')
   const form = component.container.querySelector('form')
 
-  fireEvent.change(title, blog.title)
-  fireEvent.change(author, blog.author)
-  fireEvent.change(url, blog.url)
+  fireEvent.change(title, {
+    target: { value: blog.title }
+  })
+  fireEvent.change(author, {
+    target: { value: blog.author }
+  })
+  fireEvent.change(url, {
+    target: { value: blog.url }
+  })
   fireEvent.submit(form)
 
-  // expect(setBlogs.mock.calls).toHaveLength(1)
-  // expect(setBlog)
-  // again, my codes all different this is a waste of time.
+  expect(mockHandler.mock.calls).toHaveLength(1)
+  expect(mockHandler.mock.calls[0][0].title).toBe('Blog')
+  expect(mockHandler.mock.calls[0][0].author).toBe('Saul Goodman')
+  expect(mockHandler.mock.calls[0][0].url).toBe('abc123.com')
 })
