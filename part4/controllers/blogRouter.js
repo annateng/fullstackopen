@@ -7,7 +7,7 @@ const User = require('../models/user')
 blogRouter.use(express.json())
 
 blogRouter.get('/', async(req, res) => {
-  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1})
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   res.json(blogs.map(blog => blog.toJSON()))
 })
 
@@ -20,6 +20,7 @@ blogRouter.post('/', async(req, res) => {
   blog.user = user._id
 
   const savedBlog = await blog.save()
+  savedBlog.populate('user', { username: 1, name: 1 }).execPopulate()
 
   // add blog to list of user's blogs
   user.blogs.push(savedBlog._id)
@@ -39,13 +40,7 @@ blogRouter.delete('/:id', async(req, res) => {
 })
 
 blogRouter.put('/:id', async(req, res) => {
-  const blogToUpdate = await Blog.findById(req.params.id)
-  // blog can only be updated by its creator
-  if (!req.tokenUserId || req.tokenUserId !== blogToUpdate.user.toString()) {
-    return res.status(401).send('user unauthorized to update blog')
-  }
-
-  const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+  const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true }).populate('user', { username: 1, name: 1 })
   res.json(updatedBlog.toJSON())
 })
 

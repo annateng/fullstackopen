@@ -4,6 +4,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const helper = require('../utils/list_helper')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const api = supertest(app)
 
@@ -14,6 +15,14 @@ beforeEach(async() => {
   for (let blog of helper.biggerList) {
     let blogObject = new Blog(blog)
     await blogObject.save()
+  }
+
+  await User.deleteMany({})
+
+  for (let user of helper.initialUsers) {
+    await api
+      .post('/api/users')
+      .send(user)
   }
 })
 

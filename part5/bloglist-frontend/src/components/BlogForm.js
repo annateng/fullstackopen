@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
-import blogService from '../services/blogs'
 
-const BlogForm = ({ blogs, setBlogs, setMessage, setVisible, username }) => {
+const BlogForm = ({ blogServiceCreate }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -15,19 +14,11 @@ const BlogForm = ({ blogs, setBlogs, setMessage, setVisible, username }) => {
       url
     }
 
-    blogService.create(blog)
-      .then(res => {
-        setMessage(`new blog created: ${title} by ${author}`)
-        res.user = { username } // for displaying blog details
-        setBlogs(blogs.concat(res))
-        setTitle('')
-        setAuthor('')
-        setUrl('')
-        setVisible(false)
-      })
-      .catch(() => {
-        setMessage('no blog was created')
-      })
+    blogServiceCreate(blog)
+
+    setTitle('')
+    setAuthor('')
+    setUrl('')
   }
 
   return (
