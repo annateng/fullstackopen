@@ -13,7 +13,7 @@ const Message = ({ message }) => {
   }
 
   if (message === null) return null
-  else return <div style={msgStyle}>{message}</div>
+  else return <div className='message' style={msgStyle}>{message}</div>
 }
 
 export default Message

@@ -38,7 +38,7 @@ const Blog = ({ blog, blogServiceUpdate, blogServiceDelete }) => {
   )
 
   return (
-    <div style={blogStyle}>
+    <div className='blog' style={blogStyle}>
       <span>{blog.title} by {blog.author}</span>
       <button onClick={() => setShowDetail(!showDetail)}>
         {showDetail ? 'hide' : 'show'}
