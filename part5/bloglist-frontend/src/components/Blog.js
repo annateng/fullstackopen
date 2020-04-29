@@ -31,7 +31,7 @@ const Blog = ({ blog, blogServiceUpdate, blogServiceDelete }) => {
   const details = () => (
     <div>
       <div>{blog.url}</div>
-      <div>likes: {blog.likes} <button onClick={updateLikes}>like</button></div>
+      <div className='likes'>likes: {blog.likes} <button onClick={updateLikes}>like</button></div>
       <div>{blog.user.username}</div>
       <button onClick={deleteBlog}>delete</button>
     </div>

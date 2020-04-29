@@ -4,7 +4,7 @@ describe('Blog app', function() {
     cy.request({
       url: 'http://localhost:3001/api/users',
       method: 'POST',
-      body: { 
+      body: {
         username: 'monkey-man',
         password: 'm0nk3ys33'
       }
@@ -12,7 +12,7 @@ describe('Blog app', function() {
     cy.request({
       url: 'http://localhost:3001/api/users',
       method: 'POST',
-      body: { 
+      body: {
         username: 'boris',
         password: 'password123'
       }
@@ -46,10 +46,10 @@ describe('Blog app', function() {
     })
   })
 
-  describe.only('when logged in', function() {
+  describe('when logged in', function() {
     beforeEach(function() {
       cy.login({ username: 'monkey-man', password: 'm0nk3ys33' })
-      cy.addBlog({ title: 'Auto Blog 1', author: 'M. Night', url: 'myspace.org'})
+      cy.addBlog({ title: 'Auto Blog 1', author: 'M. Night', url: 'myspace.org' })
     })
 
     it('a blog can be created', function() {
@@ -67,11 +67,45 @@ describe('Blog app', function() {
       cy.login({ username: 'boris', password: 'password123' })
 
       cy.contains('Auto Blog 1').parent().as('firstBlog')
-      cy.get('@firstBlog').contains('show').click();
-      cy.get('@firstBlog').contains('like').click();
+      cy.get('@firstBlog').contains('show').click()
+      cy.get('@firstBlog').contains('like').click()
 
       cy.get('@firstBlog').should('contain', 'likes: 1')
     })
 
+    it('user can delete blog he created', function() {
+      cy.contains('Auto Blog 1').parent().as('firstBlog')
+      cy.get('@firstBlog').contains('show').click()
+      cy.get('@firstBlog').contains('delete').click()
+
+      cy.get('html').should('not.have.descendants', 'blog')
+    })
+
+    it('user cannot delete blog he didn"t create', function() {
+      cy.login({ username: 'boris', password: 'password123' })
+
+      cy.contains('Auto Blog 1').parent().as('firstBlog')
+      cy.get('@firstBlog').contains('show').click()
+      cy.get('@firstBlog').contains('delete').click()
+
+      cy.contains('error deleting blog')
+      cy.get('html').should('have.descendants', '.blog')
+    })
+
+    it('blogs are listed in descending order by likes', function() {
+      cy.addBlog({ title: 'Auto Blog 2', author: 'M. Night', url: 'myspace.org', likes: 22 })
+      cy.addBlog({ title: 'Auto Blog 3', author: 'M. Night', url: 'myspace.org', likes: 10 })
+
+      cy.get('button:contains("show")').click({ multiple: true })
+
+      cy.get('.likes').then(likes => {
+        let likes1 = parseInt(likes.eq(0).text().substring(7, 9))
+        let likes2 = parseInt(likes.eq(1).text().substring(7, 9))
+        let likes3 = parseInt(likes.eq(2).text().substring(7, 9))
+
+        expect(likes1).to.be.gte(likes2)
+        expect(likes2).to.be.gte(likes3)
+      })
+    })
   })
 })
