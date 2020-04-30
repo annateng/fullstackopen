@@ -1,10 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import AnecdoteForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
 import Notification from './components/Notification'
 import Filter from './components/Filter'
+import axios from 'axios'
+import { useDispatch } from 'react-redux'
+import { initialize } from './reducers/anecdoteReducer'
 
-const App = () => (
+const App = () => {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/anecdotes').then(res => { dispatch(initialize(res.data)) })
+  }, [dispatch])
+
+  return (
   <div>
     <Notification />
     <h2>Anecdotes</h2>
@@ -12,7 +22,8 @@ const App = () => (
     <AnecdoteList />
     <AnecdoteForm />
   </div>
-)
+  )
+}
 
 
 export default App
