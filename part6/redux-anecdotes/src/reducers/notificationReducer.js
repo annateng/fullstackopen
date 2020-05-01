@@ -1,22 +1,31 @@
-const reducer = (state = '', action) => {
+const reducer = (state = {}, action) => {
   switch(action.type) {
     case 'DISPLAY': {
-      return action.data.notification
+      if (state.timeoutId) clearTimeout(state.timeoutId)
+      return {
+        message: action.data.notification,
+        timeoutId: action.data.timeoutId
+      }
     }
-    case 'REMOVE': return ''
+    case 'REMOVE': return {}
     default: return state
   }
 }
 
-export const setNotification = (notification, timeOut) => {
+export const setNotification = (notification, timeout) => {
   return dispatch => {
+    const timeoutId = setTimeout(() => {
+      dispatch({ type: 'REMOVE' })
+    }, timeout * 1000)
+
     dispatch({
       type: 'DISPLAY',
-      data: { notification }
+      data: { 
+        notification,
+        timeoutId 
+      }
     })
-    setTimeout(() => {
-      dispatch({ type: 'REMOVE' })
-    }, timeOut * 1000)
+    
   }
 }
 
