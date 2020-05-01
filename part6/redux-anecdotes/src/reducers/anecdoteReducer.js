@@ -1,3 +1,5 @@
+import axios from 'axios'
+const baseUrl = 'http://localhost:3001/anecdotes'
 // const anecdotesAtStart = [
 //   'If it hurts, do it more often',
 //   'Adding manpower to a late software project makes it later!',
@@ -26,9 +28,7 @@ const reducer = (state = [], action) => {
 
   switch (action.type) {
     case 'VOTE': {
-      const aToVote = state.find(a => a.id === action.data.id)
-      const newA = {...aToVote, votes: aToVote.votes + 1}
-      return [...state.filter(a => a.id !== action.data.id), newA].sort(compareVotes)
+      return [...state.filter(a => a.id !== action.data.id), action.data].sort(compareVotes)
     }
     case 'NEW': {
       return [...state, action.data].sort(compareVotes)
@@ -41,23 +41,39 @@ const reducer = (state = [], action) => {
 }
 
 export const vote = id => {
-  return {
-    type: 'VOTE',
-    data: { id }
+  return async dispatch => {
+    const resGet = await axios.get(`${baseUrl}/${id}`)
+    const newA = {...resGet.data, votes: resGet.data.votes + 1}
+    const resPut = await axios.put(`${baseUrl}/${id}`, newA)
+    dispatch({
+      type: 'VOTE',
+      data: resPut.data
+    })
   }
 }
 
-export const createAnecdote = anecdote => {
-  return {
-    type: 'NEW',
-    data: anecdote
+export const createAnecdote = anecdoteContent => {
+  const anecdote = {
+    content: anecdoteContent,
+    votes: 0
+  }
+  
+  return async dispatch => {
+    const res = await axios.post(baseUrl, anecdote)
+    dispatch({
+      type: 'NEW',
+      data: res.data
+    })
   }
 }
 
-export const initialize = anecdotes => {
-  return {
-    type: 'INITIALIZE',
-    data: anecdotes
+export const initialize = () => {
+  return async dispatch => {
+    const res = await axios.get(baseUrl)
+    dispatch({
+      type: 'INITIALIZE',
+      data: res.data
+    })
   }
 }
 

@@ -1,16 +1,3 @@
-export const displayNotification = notification => {
-  return {
-    type: 'DISPLAY',
-    data: { notification }
-  }
-}
-
-export const removeNotification = () => {
-  return {
-    type: 'REMOVE'
-  }
-}
-
 const reducer = (state = '', action) => {
   switch(action.type) {
     case 'DISPLAY': {
@@ -18,6 +5,18 @@ const reducer = (state = '', action) => {
     }
     case 'REMOVE': return ''
     default: return state
+  }
+}
+
+export const setNotification = (notification, timeOut) => {
+  return dispatch => {
+    dispatch({
+      type: 'DISPLAY',
+      data: { notification }
+    })
+    setTimeout(() => {
+      dispatch({ type: 'REMOVE' })
+    }, timeOut * 1000)
   }
 }
 
