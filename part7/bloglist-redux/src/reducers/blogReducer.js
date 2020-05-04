@@ -10,7 +10,7 @@ const blogReducer = (state = [], action) => {
   }
   case 'UPDATE_BLOG': {
     const blogToUpdate = state.find(b => b.id === action.data.blog.id)
-    const updatedBlog = {...blogToUpdate, likes: action.data.blog.likes}
+    const updatedBlog = { ...blogToUpdate, likes: action.data.blog.likes, comments: action.data.blog.comments }
     return [...state.filter(b => b.id !== action.data.blog.id), updatedBlog]
   }
   case 'DELETE_BLOG': return [...state.filter(b => b.id !== action.data.id)]

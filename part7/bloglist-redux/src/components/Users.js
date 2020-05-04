@@ -11,6 +11,7 @@ const Users = () => {
   useEffect(() => {
     userService.getAll().then(res => dispatch(initializeUsers(res)))
   }, [dispatch])
+  console.log('users: ', users)
 
   return (
     <div>

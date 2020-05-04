@@ -50,3 +50,5 @@ const getService = baseUrl => {
 export const blogService = getService('/api/blogs')
 export const loginService = getService('/api/login')
 export const userService = getService('/api/users')
+
+export default getService

@@ -63,9 +63,6 @@ const App = () => {
   const updateLikes = blog => {
 
     const updatedBlog = {
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
       likes: blog.likes + 1
     }
 
@@ -104,7 +101,7 @@ const App = () => {
   const curUser = matchUser ? users.find(user => user.id === matchUser.params.id) : null
 
   const matchBlog = useRouteMatch('/blog/:id')
-  const curBlog = matchBlog ? blogs.find(blog => blog.id === matchBlog.params.id) : null
+  const curBlogId = matchBlog ? matchBlog.params.id : null
 
   if (!user.username) return (
     <div>
@@ -126,7 +123,7 @@ const App = () => {
           <User user={curUser} />
         </Route>
         <Route path='/blog/:id'>
-          <BlogDetail blog={curBlog} updateLikes={updateLikes} />
+          <BlogDetail blogId={curBlogId} updateLikes={updateLikes} />
         </Route>
         <Route path='/users'>
           <Users />
