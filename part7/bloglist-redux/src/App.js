@@ -4,16 +4,21 @@ import Login from './components/Login'
 import Message from './components/Message'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
-import blogService from './services/blogs'
+import Users from './components/Users'
+import User from './components/User'
+import BlogDetail from './components/BlogDetail'
+import { blogService } from './services/serviceMaker'
 import { useSelector, useDispatch } from 'react-redux'
 import { initializeBlogs, createBlog, updateBlog, deleteBlog } from './reducers/blogReducer'
 import { setMessage } from './reducers/messageReducer'
 import { setUser, clearUser } from './reducers/userReducer'
 import { toggleNewBlog } from './reducers/displayReducer'
+import { Switch, Route, useRouteMatch, Link } from 'react-router-dom'
 
 const App = () => {
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
+  const users = useSelector(state => state.users)
   const dispatch = useDispatch()
 
   const blogServiceCreate = (blog) => {
@@ -55,6 +60,18 @@ const App = () => {
     }
   }
 
+  const updateLikes = blog => {
+
+    const updatedBlog = {
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes + 1
+    }
+
+    blogServiceUpdate(blog.id, updatedBlog)
+  }
+
   const logout = () => {
     window.localStorage.removeItem('user')
     blogService.setToken(null)
@@ -83,6 +100,12 @@ const App = () => {
     }
   }, [dispatch])
 
+  const matchUser = useRouteMatch('/user/:id')
+  const curUser = matchUser ? users.find(user => user.id === matchUser.params.id) : null
+
+  const matchBlog = useRouteMatch('/blog/:id')
+  const curBlog = matchBlog ? blogs.find(blog => blog.id === matchBlog.params.id) : null
+
   if (!user.username) return (
     <div>
       <Message />
@@ -91,16 +114,31 @@ const App = () => {
   )
   else return (
     <div>
+      <div style={{ backgroundColor: 'lightseagreen', padding: 5, marginBottom: 15 }}>
+        <Link to='/' style={{padding: 5}}>blogs</Link>
+        <Link to='/users' style={{padding: 5}}>users</Link>
+        <span style={{padding: 5}}>{user.username} is logged in</span>
+        <button onClick={logout}>logout</button>
+      </div>
       <Message />
-      <span>{user.username} is logged in</span>
-      <button onClick={logout}>logout</button>
-      <br />
-      <br />
-      <Togglable buttonLabel='new blog'>
-        <BlogForm blogServiceCreate={blogServiceCreate}/>
-      </Togglable>
-      <h2>blogs</h2>
-      {blogs.sort((b1, b2) => compareBlogs(b1, b2)).map(blog => <Blog key={blog.id} blog={blog} blogServiceUpdate={blogServiceUpdate} blogServiceDelete={blogServiceDelete}/>)}
+      <Switch>
+        <Route path='/user/:id'>
+          <User user={curUser} />
+        </Route>
+        <Route path='/blog/:id'>
+          <BlogDetail blog={curBlog} updateLikes={updateLikes} />
+        </Route>
+        <Route path='/users'>
+          <Users />
+        </Route>
+        <Route path='/'>
+          <Togglable buttonLabel='new blog'>
+            <BlogForm blogServiceCreate={blogServiceCreate}/>
+          </Togglable>
+          <h2>blogs</h2>
+          {blogs.sort((b1, b2) => compareBlogs(b1, b2)).map(blog => <Blog key={blog.id} blog={blog} updateLikes={updateLikes} blogServiceDelete={blogServiceDelete}/>)}
+        </Route>
+      </Switch>
     </div>
   )
 }

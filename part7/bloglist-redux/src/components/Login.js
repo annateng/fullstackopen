@@ -1,12 +1,14 @@
 import React from 'react'
 import loginService from '../services/login'
-import blogService from '../services/blogs'
+import { blogService } from '../services/serviceMaker'
 import { useDispatch } from 'react-redux'
 import { setMessage } from '../reducers/messageReducer'
 import { setUser } from '../reducers/userReducer'
+import { useHistory } from 'react-router-dom'
 
 const Login = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const handleLogin = async e => {
     e.preventDefault()
@@ -22,8 +24,9 @@ const Login = () => {
       window.localStorage.setItem('user', JSON.stringify(user))
       blogService.setToken(user.token)
       dispatch(setUser(user))
-
+      history.push('/')
     } catch (err) {
+      console.log(err)
       dispatch(setMessage('Wrong Credentials'))
     }
   }
