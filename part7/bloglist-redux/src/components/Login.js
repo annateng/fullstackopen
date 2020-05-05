@@ -1,14 +1,32 @@
 import React from 'react'
-import loginService from '../services/login'
-import { blogService } from '../services/serviceMaker'
+import { blogService, loginService } from '../services/serviceMaker'
 import { useDispatch } from 'react-redux'
 import { setMessage } from '../reducers/messageReducer'
 import { setUser } from '../reducers/userReducer'
 import { useHistory } from 'react-router-dom'
+import { Container, Button, TextField, makeStyles } from '@material-ui/core'
+
+const useStyles = makeStyles(theme => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 'auto',
+    backgroundColor: 'mistyRose',
+    borderRadius: 15
+  },
+  form: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(4)
+  }
+}))
 
 const Login = () => {
   const dispatch = useDispatch()
   const history = useHistory()
+  const classes = useStyles()
 
   const handleLogin = async e => {
     e.preventDefault()
@@ -19,7 +37,7 @@ const Login = () => {
         password: e.target.password.value
       }
 
-      const user = await loginService.login(loginInfo)
+      const user = await loginService.create(loginInfo)
       dispatch(setMessage(''))
       window.localStorage.setItem('user', JSON.stringify(user))
       blogService.setToken(user.token)
@@ -32,15 +50,13 @@ const Login = () => {
   }
 
   return (
-    <form onSubmit={handleLogin}>
-      <label>username:
-        <input id='username' name='username' type='text' defaultValue='' />
-      </label>
-      <label>password:
-        <input id='password' name='password' type='text' defaultValue='' />
-      </label>
-      <input type='submit' value='login'/>
-    </form>
+    <Container className={classes.paper} variant='outlined' maxWidth='xs' >
+      <form onSubmit={handleLogin} className={classes.form}>
+        <TextField id='username' name='username' type='text' defaultValue='' label='username' margin='normal' fullWidth />
+        <TextField id='password' name='password' type='text' defaultValue='' label='password' margin='normal' fullWidth />
+        <Button type='submit' value='login' variant='outlined' color='primary'>login</Button>
+      </form>
+    </Container>
   )
 }
 

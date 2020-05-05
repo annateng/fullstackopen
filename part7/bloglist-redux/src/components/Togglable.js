@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleNewBlog } from '../reducers/displayReducer'
+import { Button } from '@material-ui/core'
 
 // props.buttonLabel, props.children
 const Togglable = props => {
@@ -14,11 +15,10 @@ const Togglable = props => {
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button onClick={toggleVisibility}>{props.buttonLabel}</button>
+        <Button variant='outlined' color='primary' onClick={toggleVisibility}>{props.buttonLabel}</Button>
       </div>
       <div style={showWhenVisible}>
         {props.children}
-        <button onClick={toggleVisibility}>cancel</button>
       </div>
     </div>
   )

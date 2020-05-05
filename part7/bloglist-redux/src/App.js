@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import Blog from './components/Blog'
 import Login from './components/Login'
 import Message from './components/Message'
 import BlogForm from './components/BlogForm'
@@ -14,12 +13,31 @@ import { setMessage } from './reducers/messageReducer'
 import { setUser, clearUser } from './reducers/userReducer'
 import { toggleNewBlog } from './reducers/displayReducer'
 import { Switch, Route, useRouteMatch, Link } from 'react-router-dom'
+import { Container, AppBar, Button, Toolbar, Typography, makeStyles } from '@material-ui/core'
+import Blogs from './components/Blogs'
+
+const useStyles = makeStyles(theme => ({
+  button: {
+    marginRight: theme.spacing(2)
+  },
+  appbar: {
+    backgroundColor: 'lightslategrey',
+    marginBottom: theme.spacing(3)
+  },
+  right: {
+    marginLeft: 'auto'
+  },
+  typography: {
+    color: 'black'
+  }
+}))
 
 const App = () => {
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
   const users = useSelector(state => state.users)
   const dispatch = useDispatch()
+  const classes = useStyles()
 
   const blogServiceCreate = (blog) => {
     blogService.create(blog)
@@ -75,11 +93,6 @@ const App = () => {
     dispatch(clearUser())
   }
 
-  const compareBlogs = (b1, b2) => {
-    if (b1.likes === b2.likes) return b1.title < b2.title ? -1 : 1
-    return b2.likes - b1.likes
-  }
-
   // get all blogs
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -104,19 +117,25 @@ const App = () => {
   const curBlogId = matchBlog ? matchBlog.params.id : null
 
   if (!user.username) return (
-    <div>
-      <Message />
-      <Login setUser={setUser} />
-    </div>
+    <Container>
+      <div>
+        <Message />
+        <Login setUser={setUser} />
+      </div>
+    </Container>
   )
   else return (
-    <div>
-      <div style={{ backgroundColor: 'lightseagreen', padding: 5, marginBottom: 15 }}>
-        <Link to='/' style={{padding: 5}}>blogs</Link>
-        <Link to='/users' style={{padding: 5}}>users</Link>
-        <span style={{padding: 5}}>{user.username} is logged in</span>
-        <button onClick={logout}>logout</button>
-      </div>
+    <Container>
+      <AppBar position='static' className={classes.appbar}>
+        <Toolbar>
+          <Button className={classes.button} component={Link} to='/'>blogs</Button>
+          <Button className={classes.button} component={Link} to = '/users'>users</Button>
+          <div className={classes.right}>
+            <Typography variant='caption' className={classes.typography}>{user.username} is logged in</Typography>
+            <Button onClick={logout}>logout</Button>
+          </div>
+        </Toolbar>
+      </AppBar>
       <Message />
       <Switch>
         <Route path='/user/:id'>
@@ -132,11 +151,11 @@ const App = () => {
           <Togglable buttonLabel='new blog'>
             <BlogForm blogServiceCreate={blogServiceCreate}/>
           </Togglable>
-          <h2>blogs</h2>
-          {blogs.sort((b1, b2) => compareBlogs(b1, b2)).map(blog => <Blog key={blog.id} blog={blog} updateLikes={updateLikes} blogServiceDelete={blogServiceDelete}/>)}
+          <Typography variant='h2'>blogs</Typography>
+          <Blogs blogs={blogs} blogServiceDelete={blogServiceDelete} updateLikes={updateLikes}/>
         </Route>
       </Switch>
-    </div>
+    </Container>
   )
 }
 

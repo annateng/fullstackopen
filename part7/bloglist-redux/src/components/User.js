@@ -1,12 +1,13 @@
 import React from 'react'
+import { Typography, ListItemText } from '@material-ui/core'
 
 const User = ({ user }) => {
   if (!user) return null
   return (
     <div>
-      <h2>{ user.name }</h2>
-      <b>added blogs</b>
-      { user.blogs.map(blog => <li key={blog.id}>{ blog.title }</li>) }
+      <Typography variant='h3'>{ user.name }</Typography>
+      <Typography variant='h4'>added blogs</Typography>
+      { user.blogs.map(blog => <ListItemText key={blog.id}>• { blog.title }</ListItemText>) }
     </div>
   )
 }
