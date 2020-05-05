@@ -1,0 +1,20 @@
+{
+  "name": "part8",
+  "version": "0.0.1",
+  "description": "part8 graphql exercises",
+  "main": "library-backend.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node library-backend.js",
+    "dev": "nodemon library-backend.js"
+  },
+  "author": "annateng",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^2.13.0",
+    "graphql": "^15.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
