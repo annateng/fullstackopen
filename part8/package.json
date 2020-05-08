@@ -13,6 +13,7 @@
   "dependencies": {
     "apollo-server": "^2.13.0",
     "graphql": "^15.0.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.12",
     "mongoose-unique-validator": "^2.0.3"
   },

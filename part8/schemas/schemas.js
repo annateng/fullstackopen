@@ -31,7 +31,20 @@ const authorSchema = new mongoose.Schema({
   },
 })
 
+const userSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+    minlength: 3
+  },
+  favoriteGenre: {
+    type: String,
+  }
+})
+
 const Book = mongoose.model('Book', bookSchema)
 const Author = mongoose.model('Author', authorSchema)
+const User = mongoose.model('User', userSchema)
 
-module.exports = { Book, Author }
+module.exports = { Book, Author, User }
