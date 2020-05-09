@@ -30,7 +30,7 @@ const typeDefs = gql`
   type Book {
     title: String!
     published: Int!
-    author: String!
+    author: Author!
     genres: [String!]!
     id: ID!
   }
@@ -74,7 +74,7 @@ const resolvers = {
     bookCount: () => Book.find({}).then(res => res.length),
     authorCount: () => Author.find({}).then(res => res.length),
     allBooks: async(root, args) => {
-      let booksOut = await Book.find({})
+      let booksOut = await Book.find({}).populate('author')
       // if (args.author) booksOut = booksOut.filter(b => b.author === args.author)
       if (args.genre) booksOut = booksOut.filter(b => b.genres.includes(args.genre))
       return booksOut
@@ -83,7 +83,7 @@ const resolvers = {
     me: (root, args, context) => context.currentUser
   },
   Author: {
-    bookCount: root => books.filter(b => b.author === root.name).length
+    bookCount: root => Book.find({ author: root.id }).then(res => res.length)
   },
   Mutation: {
     addBook: async(root, args, context) => {
@@ -102,7 +102,10 @@ const resolvers = {
         genres: args.genres
       })
 
-      try { await newBook.save() }
+      try { 
+        await newBook.save() 
+        await newBook.populate('author').execPopulate()
+      }
       catch (err) { throw new UserInputError(err.message, { invalidArgs: args }) }
       return newBook
     },

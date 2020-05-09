@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
 import { ALL_AUTHORS, UPDATE_AUTHOR } from '../queries/queries'
 
@@ -10,19 +10,23 @@ const Authors = (props) => {
     refetchQueries: [{ query: ALL_AUTHORS }]
   })
 
-  useEffect(() => {if (authors.data) setAuthorName(authors.data.allAuthors[0].name)}, [authors.data])
-
   const handleUpdateAuthor = () => {
     if (!authorBorn) return console.error('Must set author birth year')
+    if (!authorName) return console.error('Must choose author to update')
     const name = authorName
     const setBornTo = authorBorn
     updateAuthor({ variables: {name, setBornTo} })
+      .catch(err => console.error(err.message))
+
+    setAuthorName('')
+    setAuthorBorn('')
   }
   
   if (!props.show) {
     return null
   }
   if (authors.loading) return <div>loading authors...</div>
+  if (authors.error) return<div>...{authors.error.message}</div>
 
   return (
     <div>
@@ -51,6 +55,7 @@ const Authors = (props) => {
       <div>
         name 
         <select onChange={e => setAuthorName(e.target.value)}>
+          <option></option>
           {authors.data.allAuthors.map(a =>
             <option key={a.name} value={a.name}>{a.name}</option>)}
         </select>
