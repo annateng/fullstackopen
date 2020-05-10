@@ -21,6 +21,7 @@ export const CREATE_BOOK = gql
     title
     author {
       name
+      id
     }
     published
     genres
