@@ -1,0 +1,19 @@
+{
+  "name": "part9",
+  "version": "0.0.1",
+  "description": "fullstackopen part9 typescript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ts-node": "ts-node",
+    "calculateBmi": "ts-node bmiCalculator",
+    "calculateExercises": "ts-node exerciseCalculator"
+  },
+  "author": "annateng",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^13.13.5",
+    "ts-node": "^8.10.1",
+    "typescript": "^3.8.3"
+  }
+}
