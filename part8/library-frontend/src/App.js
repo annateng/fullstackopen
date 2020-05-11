@@ -5,8 +5,8 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Login from './components/Login'
 import Recommendations from './components/Recommendations'
-import { useApolloClient, useLazyQuery } from '@apollo/client'
-import { ME } from './queries/queries'
+import { useApolloClient, useLazyQuery, useSubscription } from '@apollo/client'
+import { ME, BOOK_ADDED, ALL_BOOKS } from './queries/queries'
 
 const App = () => {
   const [page, setPage] = useState('authors')
@@ -21,6 +21,25 @@ const App = () => {
   useEffect(() => {
     getUser()
   }, [username, getUser])
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      updateCache(subscriptionData)
+    }
+  })
+
+  const updateCache = subscriptionData => {
+    const booksInStore = client.readQuery({ query: ALL_BOOKS })
+    if (!booksInStore.allBooks.map(b => b.id).includes(subscriptionData.data.bookAdded.id)) {
+      client.writeQuery({ query: ALL_BOOKS , data: { allBooks: [...booksInStore.allBooks, subscriptionData.data.bookAdded] } }) 
+    }
+
+    const favGenre = user.data && user.data.me ? user.data.me.favoriteGenre : '' 
+    const booksByFavGenre = client.readQuery({ query: ALL_BOOKS, variables: { genre: favGenre } })
+    if (!booksByFavGenre.allBooks.map(b => b.id).includes(subscriptionData.data.bookAdded.id)) {
+      client.writeQuery({ query: ALL_BOOKS, variables: { genre: favGenre }, data: { allBooks: [...booksByFavGenre.allBooks, subscriptionData.data.bookAdded] } })
+    }
+  }
 
   const handleLogout = e => {
     setUsername('')
