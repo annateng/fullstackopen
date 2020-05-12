@@ -3,7 +3,7 @@ interface BmiArgs {
   weightKg: number
 }
 
-const getBmiArgs = (args: Array<string>): BmiArgs => {
+export const getBmiArgs = (args: string[]): BmiArgs => {
   if (args.length != 4 || isNaN(Number(args[2])) || isNaN(Number(args[3]))) throw new Error ('2 command line args needed: heightCm and weightKg');
   return {
     heightCm: Number(args[2]),
@@ -11,7 +11,7 @@ const getBmiArgs = (args: Array<string>): BmiArgs => {
   }
 } 
 
-const calculateBmi = (bmiArgs: BmiArgs): string => {
+export const calculateBmi = (bmiArgs: BmiArgs): string => {
   const bmi: number = bmiArgs.weightKg / bmiArgs.heightCm / bmiArgs.heightCm * 10000;
 
   if (bmi < 18.5) return "underweight";
@@ -20,4 +20,4 @@ const calculateBmi = (bmiArgs: BmiArgs): string => {
   else return "obese";
 }
 
-console.log(calculateBmi(getBmiArgs(process.argv)));
+// console.log(calculateBmi(getBmiArgs(process.argv)));
