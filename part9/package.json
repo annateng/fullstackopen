@@ -9,13 +9,17 @@
     "calculateBmi": "ts-node bmiCalculator",
     "calculateExercises": "ts-node exerciseCalculator",
     "start": "ts-node index.ts",
-    "dev": "ts-node-dev index.ts"
+    "dev": "ts-node-dev index.ts",
+    "lint": "eslint --ext .ts ."
   },
   "author": "annateng",
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.6",
     "@types/node": "^13.13.5",
+    "@typescript-eslint/eslint-plugin": "^2.31.0",
+    "@typescript-eslint/parser": "^2.31.0",
+    "eslint": "^7.0.0",
     "ts-node": "^8.10.1",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.8.3"

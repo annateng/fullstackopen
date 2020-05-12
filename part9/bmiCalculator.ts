@@ -1,6 +1,6 @@
 interface BmiArgs {
-  heightCm: number,
-  weightKg: number
+  heightCm: number;
+  weightKg: number;
 }
 
 export const getBmiArgs = (args: string[]): BmiArgs => {
@@ -8,8 +8,8 @@ export const getBmiArgs = (args: string[]): BmiArgs => {
   return {
     heightCm: Number(args[2]),
     weightKg: Number(args[3])
-  }
-} 
+  };
+}; 
 
 export const calculateBmi = (bmiArgs: BmiArgs): string => {
   const bmi: number = bmiArgs.weightKg / bmiArgs.heightCm / bmiArgs.heightCm * 10000;
@@ -18,6 +18,6 @@ export const calculateBmi = (bmiArgs: BmiArgs): string => {
   else if (bmi <= 25) return "normal";
   else if (bmi <= 30) return "overweight";
   else return "obese";
-}
+};
 
 // console.log(calculateBmi(getBmiArgs(process.argv)));
