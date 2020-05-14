@@ -9,6 +9,14 @@ export interface Patient {
   name: string;
   dateOfBirth: string;
   ssn: string;
-  gender: 'male' | 'female';
+  gender: Gender;
   occupation: string;
+}
+
+export type NewPatient = Omit<Patient, 'id'>;
+
+export enum Gender {
+  Female = 'female',
+  Male = 'male',
+  Other = 'other'
 }

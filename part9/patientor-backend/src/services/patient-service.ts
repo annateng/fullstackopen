@@ -1,9 +1,9 @@
 import patientData from '../../data/patients';
-import { Patient } from '../types';
+import { Patient, NewPatient } from '../types';
 
 const patients: Patient[] = patientData;
 
-const getPatients = (): Pick<Patient, 'id' | 'name' | 'dateOfBirth' | 'gender' | 'occupation'>[] => {
+const getNonsensitivePatients = (): Pick<Patient, 'id' | 'name' | 'dateOfBirth' | 'gender' | 'occupation'>[] => {
   return patients.map(p => {
     return {
       id: p.id,
@@ -15,5 +15,15 @@ const getPatients = (): Pick<Patient, 'id' | 'name' | 'dateOfBirth' | 'gender' |
   });
 };
 
-export default { getPatients };
+const getPatients = (): Patient[] => {
+  return patients;
+};
+
+const addPatient = (np: NewPatient): Patient => {
+  const patient = {...np, id: Math.floor(Math.random() * 1000000).toString() };
+  patients.push(patient);
+  return patient;
+};
+
+export default { getPatients, getNonsensitivePatients, addPatient };
 
