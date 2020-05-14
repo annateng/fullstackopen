@@ -19,11 +19,15 @@ const getPatients = (): Patient[] => {
   return patients;
 };
 
+const getPatient = (id: string): Patient | undefined => {
+  return patients.find(p => p.id === id);
+}
+
 const addPatient = (np: NewPatient): Patient => {
   const patient = {...np, id: Math.floor(Math.random() * 1000000).toString() };
   patients.push(patient);
   return patient;
 };
 
-export default { getPatients, getNonsensitivePatients, addPatient };
+export default { getPatients, getNonsensitivePatients, addPatient, getPatient };
 

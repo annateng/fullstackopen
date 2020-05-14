@@ -3,6 +3,10 @@ import patientService from '../services/patient-service';
 import { toNewPatient } from '../utils';
 const router = express.Router();
 
+router.get('/:id', (req, res) => {
+  res.json(patientService.getPatient(req.params.id));
+})
+
 router.get('/', (_req, res) => {
   res.json(patientService.getNonsensitivePatients());
 });

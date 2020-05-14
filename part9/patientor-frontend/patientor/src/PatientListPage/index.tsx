@@ -1,13 +1,14 @@
 import React from "react";
 import axios from "axios";
 import { Container, Table, Button } from "semantic-ui-react";
+import { Link } from "react-router-dom";
 
 import { PatientFormValues } from "../AddPatientModal/AddPatientForm";
 import AddPatientModal from "../AddPatientModal";
 import { Patient } from "../types";
 import { apiBaseUrl } from "../constants";
 import HealthRatingBar from "../components/HealthRatingBar";
-import { useStateValue } from "../state";
+import { useStateValue, addPatient } from "../state";
 
 const PatientListPage: React.FC = () => {
   const [{ patients }, dispatch] = useStateValue();
@@ -28,7 +29,7 @@ const PatientListPage: React.FC = () => {
         `${apiBaseUrl}/patients`,
         values
       );
-      dispatch({ type: "ADD_PATIENT", payload: newPatient });
+      dispatch(addPatient(newPatient));
       closeModal();
     } catch (e) {
       console.error(e.response.data);
@@ -48,6 +49,7 @@ const PatientListPage: React.FC = () => {
             <Table.HeaderCell>Gender</Table.HeaderCell>
             <Table.HeaderCell>Occupation</Table.HeaderCell>
             <Table.HeaderCell>Health Rating</Table.HeaderCell>
+            <Table.HeaderCell>Patient Details</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -58,6 +60,9 @@ const PatientListPage: React.FC = () => {
               <Table.Cell>{patient.occupation}</Table.Cell>
               <Table.Cell>
                 <HealthRatingBar showText={false} rating={1} />
+              </Table.Cell>
+              <Table.Cell>
+                <Button as={Link} to={`/patient/${patient.id}`}>See Patient Details</Button>
               </Table.Cell>
             </Table.Row>
           ))}
