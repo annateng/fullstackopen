@@ -10,10 +10,10 @@ export enum Gender {
   Other = "other"
 }
 
-enum Type {
+export enum Type {
   HealthCheck = "HealthCheck",
   OccupationalHealthcare = "OccupationalHealthcare",
-  HospitalEntry = "HospitalEntry",
+  Hospital = "Hospital",
 }
 
 export interface Patient {
@@ -52,18 +52,18 @@ interface SickLeave {
 }
 
 interface HealthCheckEntry extends BaseEntry {
-  type: Type.HospitalEntry;
+  type: Type.HealthCheck;
   healthCheckRating: HealthCheckRating;
 }
 
 interface OccupationalHealthcareEntry extends BaseEntry {
   type: Type.OccupationalHealthcare;
   employerName: string;
-  sickLeave: SickLeave;
+  sickLeave?: SickLeave;
 }
 
 interface HospitalEntry extends BaseEntry {
-  type: Type.HospitalEntry;
+  type: Type.Hospital;
   discharge: Discharge;
 }
 
