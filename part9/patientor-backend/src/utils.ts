@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NewPatient, Gender } from './types';
+import { NewPatient, Gender, Type } from './types';
 
 const isString = (text: any): text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -26,6 +26,10 @@ const isSsn = (ssn: string): boolean => {
   return true;
 };
 
+const isType = (type: string): type is Type => {
+  return Object.values(Type).includes(type);
+};
+
 const parseName = (name: any): string => {
   if (!name || !isString(name)) throw new Error('malformatted field: name');
   return name;
@@ -46,10 +50,15 @@ const parseGender = (gender: any): Gender => {
   return gender;
 };
 
-const parseOccupation = (occupation: any) => {
+const parseOccupation = (occupation: any): string => {
   if (!occupation || !isString(occupation)) throw new Error('malformatted field: occupation');
   return occupation;
 };
+
+const parseEntries = (entries: any) => {
+  if (!entries || !isType(entries.type)) throw new Error('malformatted field: entries');
+  return entries;
+}
 
 export const toNewPatient = (object: any): NewPatient => {
   const newPatient = {
@@ -57,7 +66,8 @@ export const toNewPatient = (object: any): NewPatient => {
     dateOfBirth: parseDob(object.dateOfBirth),
     ssn: parseSsn(object.ssn),
     gender: parseGender(object.gender),
-    occupation: parseOccupation(object.occupation)
+    occupation: parseOccupation(object.occupation),
+    entries: parseEntries(object.entries)
   };
 
   return newPatient;

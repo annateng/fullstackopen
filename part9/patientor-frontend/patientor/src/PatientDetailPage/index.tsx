@@ -3,11 +3,11 @@ import { useParams } from "react-router-dom";
 import { useStateValue, addPatient } from "../state";
 import axios from "axios";
 import { apiBaseUrl } from "../constants";
-import { Patient } from "../types";
-import {Icon } from "semantic-ui-react";
+import { Patient, Gender } from "../types";
+import { Icon } from "semantic-ui-react";
 
 const PatientDetailPage: React.FC = () => {
-  const [{ patients }, dispatch] = useStateValue();
+  const [{ patients, diagnoses }, dispatch] = useStateValue();
   const [patientDetails, setPatientDetails] = React.useState<Patient | undefined>();
   const params = useParams<{ id: string }>();
 
@@ -19,8 +19,8 @@ const PatientDetailPage: React.FC = () => {
         dispatch(addPatient(details));
       } catch (e) { console.error(e); }
     };
-    
-    if (patients[params.id].ssn) setPatientDetails(patients[params.id]);
+
+    if (patients[params.id] && patients[params.id].ssn) setPatientDetails(patients[params.id]);
     else {
       getPatientDetails();
     }
@@ -28,13 +28,20 @@ const PatientDetailPage: React.FC = () => {
   }, []); // eslint-disable-line
 
   if (patientDetails) {
-    const genderIconName = patientDetails.gender === "male" ? "mars" : patientDetails.gender === "female" ? "venus" : "transgender alternate";
+    const genderIconName = patientDetails.gender === Gender.Male ? "mars" : patientDetails.gender === Gender.Female ? "venus" : "transgender alternate";
 
     return (
       <div>
         <h3>{patientDetails.name} <Icon name={genderIconName} /></h3>
         <div>ssn: {patientDetails.ssn}</div>
         <div>occupation: {patientDetails.occupation}</div>
+        <h4>entries:</h4>
+        {patientDetails.entries.map(e => (
+            <div key={e.id}>
+              {e.date}: {e.description}
+              {e.diagnosisCodes && e.diagnosisCodes.map(dc => <li key={dc}>{dc} {diagnoses[dc].name}</li>)}
+            </div>
+          ))}
       </div>
     )
   } else {

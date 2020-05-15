@@ -1,7 +1,7 @@
 import React from "react";
 import { ErrorMessage, Field, FieldProps, FormikProps } from "formik";
 import { Dropdown, DropdownProps, Form } from "semantic-ui-react";
-import { Diagnosis, Gender } from "../types";
+import { Diagnose, Gender } from "../types";
 
 // structure of a single option
 export type GenderOption = {
@@ -78,7 +78,7 @@ export const DiagnosisSelection = ({
   setFieldValue,
   setFieldTouched
 }: {
-  diagnoses: Diagnosis[];
+  diagnoses: Diagnose[];
   setFieldValue: FormikProps<{ diagnosisCodes: string[] }>["setFieldValue"];
   setFieldTouched: FormikProps<{ diagnosisCodes: string[] }>["setFieldTouched"];
 }) => {
