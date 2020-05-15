@@ -16,6 +16,7 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
         <Segment.Group horizontal>
           <Icon name="heartbeat" size="huge" color="yellow" />
           <Segment color="yellow">
+            <div>{entry.type}</div>
             <div><b>date:</b> {entry.date}</div>
             <div><b>description:</b> {entry.description}</div>
             <div><b>specialist:</b> {entry.specialist}</div>
@@ -30,6 +31,7 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
         <Segment.Group horizontal>
           <Icon size="huge" name="first aid" color="olive" />
           <Segment basic color="olive">
+            <div>{entry.type}</div>
             <div><b>date:</b> {entry.date}</div>
             <div><b>description:</b> {entry.description}</div>
             <div><b>specialist:</b> {entry.specialist}</div>
@@ -45,6 +47,7 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
         <Segment.Group horizontal>
           <Icon name="hospital" size="huge" color="violet" />
           <Segment color="violet">
+            <div>{entry.type}</div>
             <div><b>date:</b> {entry.date}</div>
             <div><b>description:</b> {entry.description}</div>
             <div><b>specialist:</b> {entry.specialist}</div>

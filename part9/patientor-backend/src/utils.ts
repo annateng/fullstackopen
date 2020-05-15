@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NewPatient, Gender, Type } from './types';
+import { NewPatient, Gender, Type, NewEntry, Diagnose, HealthCheckRating, Entry, SickLeave, Discharge } from './types';
+
+export const assertNever = (value: never): never => {
+  throw new Error(`Unhandled discriminated union member: ${JSON.stringify(value)}`);
+}
 
 const isString = (text: any): text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -26,17 +30,32 @@ const isSsn = (ssn: string): boolean => {
   return true;
 };
 
-const isType = (type: string): type is Type => {
+const isType = (type: any): type is Type => {
+  console.log(Object.values(Type), type);
   return Object.values(Type).includes(type);
 };
 
-const parseName = (name: any): string => {
-  if (!name || !isString(name)) throw new Error('malformatted field: name');
-  return name;
+const isDCode = (code: any): code is Diagnose['code'] => {
+  if (!isString(code)) return false;
+  return /[A-Z]\d\d\.\d/.test(code);  // regex expression check for diagnosisCode
+}
+
+const isHealthCheckRating = (rating: any): rating is HealthCheckRating => {
+  return Object.values(HealthCheckRating).includes(rating);
+}
+
+const isDischarge = (discharge: any): discharge is Discharge => {
+  if (!discharge.date || !discharge.criteria || !isString(discharge.criteria) || !isDate(discharge.date)) return false;
+  return true;
+}
+
+const parseString = (str: any): string => {
+  if (!str || !isString(str)) throw new Error('malformatted field: string');
+  return str;
 };
 
-const parseDob = (dob: any): string => {
-  if (!dob || !isString(dob) || !isDate(dob)) throw new Error('malformatted field: dateOfBirth');
+const parseDate = (dob: any): string => {
+  if (!dob || !isString(dob) || !isDate(dob)) throw new Error('malformatted field: date');
   return dob;
 };
 
@@ -50,23 +69,87 @@ const parseGender = (gender: any): Gender => {
   return gender;
 };
 
-const parseOccupation = (occupation: any): string => {
-  if (!occupation || !isString(occupation)) throw new Error('malformatted field: occupation');
-  return occupation;
-};
-
-const parseEntries = (entries: any) => {
-  if (!entries || !isType(entries.type)) throw new Error('malformatted field: entries');
+const parseEntries = (entries: any): Entry[] => {
+  if (!entries) throw new Error('malformatted field: entries');
+  entries.forEach((e: any) => { if (!isType(e.type)) throw new Error('malformatted field: entries') });
   return entries;
+}
+
+const parseDiagnosisCodes = (dCodes: any): Array<Diagnose['code']> => {
+  if (!dCodes) throw new Error('malformatted field: diagnosisCodes');
+  dCodes.forEach((dCode: any) => { if (!isDCode(dCode)) throw new Error('malformatted field: diagnosisCodes') });
+  return dCodes;
+}
+
+const parseType = (type: any): Type => {
+  if (!type || !isType(type)) throw new Error('malformatted field: type');
+  return type;
+}
+
+const parseHealthCheckRating = (rating: any) => {
+  if (!rating || !isHealthCheckRating(rating)) throw new Error('malformatted field: healthcheck rating');
+  return rating;
+}
+
+const parseSickLeave = (sickLeave: any): SickLeave | undefined => {
+  if (!sickLeave) return undefined;
+  if (!sickLeave.startDate || !sickLeave.endDate) throw new Error('malformatted field: sick leave');
+  return sickLeave;
+}
+
+const parseDischarge = (discharge: any): Discharge => {
+  if (!discharge || !isDischarge(discharge)) throw new Error('malformatted field: discharge');
+  return discharge;
+}
+
+
+export const toNewEntry = (object: any): NewEntry => {
+  let newEntry: NewEntry;
+  const type = parseType(object.type);
+  switch (type) {
+    case Type.HealthCheck:
+      newEntry = {
+        description: parseString(object.description),
+        date: parseDate(object.date),
+        specialist: parseString(object.specialist),
+        diagnosisCodes: parseDiagnosisCodes(object.diagnosisCodes),
+        type,
+        healthCheckRating: parseHealthCheckRating(object.healthCheckRating)
+      };
+      break;
+    case Type.OccupationalHealthcare:
+      newEntry = {
+        description: parseString(object.description),
+        date: parseDate(object.date),
+        specialist: parseString(object.specialist),
+        diagnosisCodes: parseDiagnosisCodes(object.diagnosisCodes),
+        type,
+        employerName: parseString(object.employerName),
+        sickLeave: parseSickLeave(object.sickLeave)
+      };
+      break;
+    case Type.Hospital: 
+      newEntry = {
+        description: parseString(object.description),
+        date: parseDate(object.date),
+        specialist: parseString(object.specialist),
+        diagnosisCodes: parseDiagnosisCodes(object.diagnosisCodes),
+        type,
+        discharge: parseDischarge(object.discharge)
+      };
+      break;
+    default: return assertNever(type);
+  }
+  return newEntry;
 }
 
 export const toNewPatient = (object: any): NewPatient => {
   const newPatient = {
-    name: parseName(object.name),
-    dateOfBirth: parseDob(object.dateOfBirth),
+    name: parseString(object.name),
+    dateOfBirth: parseDate(object.dateOfBirth),
     ssn: parseSsn(object.ssn),
     gender: parseGender(object.gender),
-    occupation: parseOccupation(object.occupation),
+    occupation: parseString(object.occupation),
     entries: parseEntries(object.entries)
   };
 

@@ -11,8 +11,8 @@ export enum Gender {
 }
 
 export enum Type {
-  HealthCheck = "HealthCheck",
-  OccupationalHealthcare = "OccupationalHealthcare",
+  HealthCheck = "Health Check",
+  OccupationalHealthcare = "Occupational Healthcare",
   Hospital = "Hospital",
 }
 

@@ -1,0 +1,15 @@
+POST http://localhost:3001/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/entries
+content-type: application/json
+
+{
+    "type": "Occupational Healthcare",
+    "description": "test",
+    "date": "2020-01-03",
+    "specialist": "Dr. Dre",
+    "diagnosisCodes": ["Z45.3"],
+    "employerName": "Pizza Hut",
+    "sickLeave": { 
+      "startDate": "2020-01-03",
+      "endDate": "2020-01-09"
+    }
+}
