@@ -48,6 +48,7 @@ export const AddPatientForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         if (!values.occupation) {
           errors.occupation = requiredError;
         }
+        console.log('patient form', errors);
         return errors;
       }}
     >

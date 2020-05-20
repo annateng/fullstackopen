@@ -2,13 +2,34 @@ import React from 'react';
 import { Entry, Type } from '../types';
 import { Segment, Icon } from "semantic-ui-react";
 import { useStateValue } from "../state";
+import axios from 'axios';
+import { setDiagnosisList } from '../state';
+import { apiBaseUrl } from '../constants';
+import { Diagnose } from '../types';
 
 const assertNever = (item: never): never => {
   throw new Error(`unhandled discriminated union member: ${JSON.stringify(item)}`)
 };
 
 const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
-  const [{ diagnoses },] = useStateValue();
+  const [{ diagnoses }, dispatch] = useStateValue();
+
+  React.useEffect(() => {
+    const fetchDiagnoses = async() => {
+      try {
+        const { data: diagnosisListFromApi } = await axios.get<Diagnose[]>(`${apiBaseUrl}/diagnoses`);
+        dispatch(setDiagnosisList(diagnosisListFromApi));
+      } catch (e) {
+        console.error(e);
+      }
+    };
+  
+    if (!diagnoses) {
+      fetchDiagnoses();
+    }
+  }, []) // eslint-disable-line
+
+  if (Object.keys(diagnoses).length === 0 && diagnoses.constructor === Object) return null;
 
   switch (entry.type) {
     case Type.HealthCheck: 
