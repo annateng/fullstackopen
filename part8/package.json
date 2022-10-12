@@ -11,7 +11,7 @@
   "author": "annateng",
   "license": "ISC",
   "dependencies": {
-    "apollo-server": "^2.13.0",
+    "apollo-server": "^2.25.4",
     "graphql": "^15.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.12",
